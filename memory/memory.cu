@@ -28,7 +28,7 @@ __global__
 void reverse(float* devA, float* devB)
 {
   // HANDSON 2.3 Create a __shared__ temporary array of length nThreads for the swap
-  __shared__ float tmp_arrp[nThreads];
+  __shared__ float tmp_arr[nThreads];
   
   // Get the index in this block
   int idx = blockIdx.x * blockDim.x + threadIdx.x;
@@ -36,10 +36,10 @@ void reverse(float* devA, float* devB)
   tmp_arr[nThreads - (threadIdx.x+1)] = devA[idx];
 
   // HANDSON 2.5 synchronize the threads
-  _syncthreads();
+  __syncthreads();
 
   // HANDSON 2.6 Calculate the initial position of this block in the grid
-  int blockOffset = arr_size - (blockIdx.x + 1) * blockDim.x // ???
+  int blockOffset = arr_size - (blockIdx.x + 1) * blockDim.x;
 
   // Reverse the elements
   // HANDSON 2.7 Fill the output array with the reversed elements from this block
@@ -52,8 +52,9 @@ int main( )
   // HANDSON 2.2 Replace the host array size by a const int
   //             Here and elsewhere
   // size of the array in char
-  size_t sizeChar = ARRAY_SIZE * sizeof(float);
   const int host_size = 65536;
+  size_t sizeChar = host_size * sizeof(float);
+  
 
   // Allocate host memory
   float* hostIn = (float*) malloc(sizeChar);
