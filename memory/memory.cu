@@ -71,7 +71,7 @@ int main( )
 	      );
 
   // Initialize the arrays
-  for (int i = 0; i < ARRAY_SIZE; i++) {
+  for (int i = 0; i < host_size; i++) {
     hostIn[i] = i;
     hostOut[i] = 0;
   }
@@ -82,7 +82,7 @@ int main( )
 	      );
 
   // Define the size of the task
-  dim3 blocksPerGrid(ARRAY_SIZE/nThreads);
+  dim3 blocksPerGrid(host_size/nThreads);
   dim3 threadsPerBlock(nThreads);
 
   reverse<<<blocksPerGrid, threadsPerBlock>>>(devIn, devOut);
@@ -99,10 +99,10 @@ int main( )
 
   // Check and print the result
   int nCorrect = 0;
-  for (int i = 0; i < ARRAY_SIZE; i++) {
-    nCorrect += (hostOut[i] == hostIn[ARRAY_SIZE - (i+1)]) ? 1 : 0;
+  for (int i = 0; i < host_size; i++) {
+    nCorrect += (hostOut[i] == hostIn[host_size - (i+1)]) ? 1 : 0;
   }
-  std::cout << ((nCorrect == ARRAY_SIZE) ? "Success! " : "Failure: ");
+  std::cout << ((nCorrect == host_size) ? "Success! " : "Failure: ");
   std::cout << nCorrect  << " elements were correctly swapped." << std::endl;
 
   // Free device memory
