@@ -76,6 +76,10 @@ int main( )
     hostOut[i] = 0;
   }
 
+  myCudaCheck(
+	      cudaMemcpyToSymbol( arr_size, &host_size, sizeof(int))
+	      );
+
   // Copy the input array from the host to the device
   myCudaCheck(
 	      cudaMemcpy(devIn, hostIn, sizeChar, cudaMemcpyHostToDevice)
